@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+</head>
+<body>
+    <h1>House Price Prediction</h1>
+
+    <form action="/predict" method="POST">
+        <label>CRIM (Crime rate):</label><br>
+        <input type="number" name="CRIM" step="any"><br><br>
+
+        <label>ZN (Residential land zone):</label><br>
+        <input type="number" name="ZN" step="any"><br><br>
+
+        <label>INDUS (Non-retail business acres):</label><br>
+        <input type="number" name="INDUS" step="any"><br><br>
+
+        <label>CHAS (Charles River dummy variable):</label><br>
+        <input type="number" name="CHAS" step="any"><br><br>
+
+        <label>NOX (Nitrogen oxides concentration):</label><br>
+        <input type="number" name="NOX" step="any"><br><br>
+
+        <label>RM (Average number of rooms):</label><br>
+        <input type="number" name="RM" step="any"><br><br>
+
+        <label>AGE (Proportion of owner-occupied units built before 1940):</label><br>
+        <input type="number" name="AGE" step="any"><br><br>
+
+        <label>DIS (Distance to employment centers):</label><br>
+        <input type="number" name="DIS" step="any"><br><br>
+
+        <label>RAD (Index of accessibility to radial highways):</label><br>
+        <input type="number" name="RAD" step="any"><br><br>
+
+        <label>TAX (Property tax rate per $10,000):</label><br>
+        <input type="number" name="TAX" step="any"><br><br>
+
+        <label>PTRATIO (Pupil-teacher ratio by town):</label><br>
+        <input type="number" name="PTRATIO" step="any"><br><br>
+
+        <label>B (Proportion of Black residents):</label><br>
+        <input type="number" name="B" step="any"><br><br>
+
+        <label>LSTAT (Percentage of lower status population):</label><br>
+        <input type="number" name="LSTAT" step="any"><br><br>
+
+        <button type="submit">Get Prediction</button>
+    </form>
+
+    {% if prediction_text %}
+        <h2>{{ prediction_text }}</h2>
+    {% endif %}
+</body>
+</html>
+
