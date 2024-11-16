@@ -22,7 +22,7 @@ jobs:
       # Step 3: Deploy to Render
       - name: Deploy to Render
         run: |
-          curl -X POST "https://api.render.com/v1/services/<srv-css9r9i3esus739jssn0>/deploys" \
+          curl -X POST "https://api.render.com/v1/services/<srv-cssdvq52ng1s73ak18tg>/deploys" \
           -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
           -H "Content-Type: application/json" \
           -d '{"clearCache": true}'
