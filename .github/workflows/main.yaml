@@ -1,29 +1,41 @@
-name: Build and Deploy to Render
+name: Deploy to Render
 
 on:
   push:
     branches:
-      - main  # Trigger workflow on push to the main branch
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code from the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Step 2: Build the Docker image
-      - name: Build Docker Image
-        run: |
-          docker build -t my-flask-app .
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-      # Step 3: Deploy to Render
-      - name: Deploy to Render
-        run: |
-          curl -X POST "https://api.render.com/v1/services/<srv-cssdvq52ng1s73ak18tg>/deploys" \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "Content-Type: application/json" \
-          -d '{"clearCache": true}'
-  
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-app .
+
+    - name: Tag Docker image
+      run: |
+        docker tag my-app registry.render.com/your-service-name:latest
+
+    - name: Push Docker image to Render
+      run: |
+        docker push registry.render.com/your-service-name:latest
+
+    - name: Deploy to Render
+      run: |
+        curl -X POST "https://api.render.com/v1/services/srv-cssdvq52ng1s73ak18tg/deploys" \
+        -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
+
