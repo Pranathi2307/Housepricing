@@ -24,8 +24,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t myusername/housepricing:v1 .
-          docker push myusername/housepricing:v1
+          docker build -t pranathi704/housepricing:v1 .
+          docker push pranathi704/housepricing:v1
 
       - name: Trigger Render Deployment
         run: |
