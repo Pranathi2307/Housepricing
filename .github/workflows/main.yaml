@@ -3,28 +3,31 @@ name: Deploy Docker App to Render
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on push to the main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: |
-        docker build -t my-app .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Log in to DockerHub (if needed)
-      run: |
-        echo ${{ secrets.DOCKER_USERNAME }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Push Docker image to DockerHub (if needed)
-      run: |
-        docker push my-app
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t myusername/housepricing:v1 .
+          docker push myusername/housepricing:v1
 
-    - name: Trigger deployment on Render
-      run: |
-        curl -X POST "https://api.render.com/deploy/srv-cssdvq52ng1s73ak18tg?key=${{ secrets.RENDER_API_KEY }}"
+      - name: Trigger Render Deployment
+        run: |
+          curl -X POST "https://api.render.com/v1/services/srv-cssdvq52ng1s73ak18tg/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
