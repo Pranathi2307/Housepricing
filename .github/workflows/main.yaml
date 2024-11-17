@@ -1,4 +1,4 @@
-name: Deploy to Render
+name: Deploy Docker App to Render
 
 on:
   push:
@@ -6,36 +6,25 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker image
       run: |
         docker build -t my-app .
 
-    - name: Tag Docker image
+    - name: Log in to DockerHub (if needed)
       run: |
-        docker tag my-app registry.render.com/your-service-name:latest
+        echo ${{ secrets.DOCKER_USERNAME }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-    - name: Push Docker image to Render
+    - name: Push Docker image to DockerHub (if needed)
       run: |
-        docker push registry.render.com/your-service-name:latest
+        docker push my-app
 
-    - name: Deploy to Render
+    - name: Trigger deployment on Render
       run: |
-        curl -X POST "https://api.render.com/v1/services/srv-cssdvq52ng1s73ak18tg/deploys" \
-        -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
-
+        curl -X POST "https://api.render.com/deploy/srv-cssdvq52ng1s73ak18tg?key=${{ secrets.RENDER_API_KEY }}"
